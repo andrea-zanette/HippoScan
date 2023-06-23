@@ -29,12 +29,7 @@ import shutil
 
 #IMPORT DATASET
 test_images_path = "dataset/images/test"
-#test_masks_path = "dataset/masks/test"
-#test_images = glob(os.path.join(test_images_path, "*"))
-#test_masks = glob(os.path.join(test_masks_path, "*"))
-#test_masks.sort()
-#print("There are "+str(len(test_images))+" images")
-#print("There are "+str(len(test_masks))+" masks")
+test_masks_path = "dataset/masks/test"
 
 divider = '------------------------------------'
 
@@ -94,7 +89,7 @@ def runThreads(id, dpu, img, input_scale):
         job_id = dpu.execute_async(input_data, output_data)
         dpu.wait(job_id)
 
-def app(threads, model, save):
+def app(threads, model):
     """Runs the n-threads inference process"""
 
     test_images = glob(os.path.join(test_images_path, "*"))
@@ -150,17 +145,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('-t', '--threads', type=int, default=3, help='Number of threads. Default is 3')
     ap.add_argument('-m', '--model', type=str, default='HippoScan_Ultra96-2.xmodel',
-                    help='Path of xmodel. Default is customcnn.xmodel')
-    ap.add_argument('-s', '--save', action='store_true',
-                    help='Save predictions to directory predictions/ . Default is False')
+                    help='Path of xmodel. Default is HippoScan_Ultra96-2.xmodel')
     args = ap.parse_args()
 
     print('Command line options:')
     print(' --threads   : ', args.threads)
     print(' --model     : ', args.model)
-    print(' --save      : ', args.save)
 
-    app(args.threads, args.model, args.save)
+    app(args.threads, args.model)
 
 
 if __name__ == '__main__':
